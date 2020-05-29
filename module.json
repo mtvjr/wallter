@@ -1,0 +1,21 @@
+{
+    "name": "wallter",
+    "title": "Wallter",
+    "description": "A module for editing walls",
+    "author": "Michael Volling",
+    "authors": [
+        {
+            "name": "Michael Volling",
+            "email": "mvollingjr@gmail.com"
+        }
+    ],
+    "version": "0.0.1",
+    "minimumCoreVersion": "0.6.0",
+    "compatibleCoreVersion": "0.6.0",
+    "url": "https://github.com/mtvjr/wallter",
+    "readme": "https://github.com/mtvjr/wallter/blob/master/README.md",
+    "license": "https://github.com/mtvjr/wallter/blob/master/LICENSE",
+    "manifest": "https://raw.githubusercontent.com/mtvjr/wallter/master/module.json",
+    "download": "https://github.com/mtvjr/wallter/archive/master.zip",
+    "esmodules": ["./scripts/wallter.mjs"]
+}
