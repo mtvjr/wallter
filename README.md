@@ -10,3 +10,12 @@ While walls are selected, the `arrow keys` will move the walls.
 If `shift` is held, the topmost (then leftmost) wall endpoint will move.
 If `alt` is held, the bottommost (then rightmost) wall endpoint will move.
 
+## How to Install
+
+### Latest Manifest
+
+Add this module using this manifest link: https://raw.githubusercontent.com/mtvjr/background-volume/master/module.json
+
+## I have a problem, how do I get in contact?
+
+Please ping mtvjr#4598 on Foundry's Discord in the #modules channel or open up an issue on GitHub.
