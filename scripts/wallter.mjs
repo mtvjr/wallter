@@ -1,8 +1,9 @@
 import Logger from "./common/logger.mjs"
+import RegisterEvents from "./events.mjs"
 
 export const MOD_NAME = "Wallter";
 export const MOD_NICK = "wallter";
-export const VERSION = "v0.0.1";
+export const VERSION  = "v0.0.1";
 
 // Target for end users
 const RELEASE = {
@@ -30,8 +31,14 @@ function init() {
 }
 
 function ready() {
-    Logger.log(Logger.Low, `${MOD_NAME} is ready`);
+    // We only need to run for GMs, do not activate for players
+    if (!game.user.isGM) {
+        Logger.log(Logger.High, `${MOD_NAME} is not activated, you are not a GM.`);
+        return;
+    }
 
+    Logger.log(Logger.High, `${MOD_NAME} is activated.`);
+    RegisterEvents();
 }
 
 
