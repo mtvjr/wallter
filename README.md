@@ -14,7 +14,7 @@ If `alt` is held, the bottommost (then rightmost) wall endpoint will move.
 
 ### Latest Manifest
 
-Add this module using this manifest link: https://raw.githubusercontent.com/mtvjr/background-volume/master/module.json
+Add this module using this manifest link: https://raw.githubusercontent.com/mtvjr/wallter/master/module.json
 
 ## I have a problem, how do I get in contact?
 
