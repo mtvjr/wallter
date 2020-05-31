@@ -17,7 +17,7 @@ const DEVEL = {
     name: "Devel"
 }
 
-export const Target = DEVEL;
+export const Target = RELEASE;
 
 function init() {
     Logger.init(MOD_NAME, Target.threshold);
