@@ -3,7 +3,7 @@ import RegisterEvents from "./events.mjs"
 
 export const MOD_NAME = "Wallter";
 export const MOD_NICK = "wallter";
-export const VERSION  = "v0.1.0";
+export const VERSION  = "v0.1.1";
 
 // Target for end users
 const RELEASE = {
