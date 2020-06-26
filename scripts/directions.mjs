@@ -6,11 +6,11 @@ class Direction {
     _dX = 0;
     _dY = 0;
 
-    constructor(name, code, dx, dy) {
-        this._name = name;
-        this._code = code;
-        this._dX = dx;
-        this._dY = dy;
+    constructor(data) {
+        this._name = data.name;
+        this._code = data.code;
+        this._dX = data.dx;
+        this._dY = data.dy;
     }
 
     get dX() {
@@ -38,13 +38,37 @@ class Direction {
 }
 
 export default class Directions {
-    static Left  =  new Direction("left", 37, -1, 0);
-    static Right = new Direction("right", 39, 1, 0);
-    static Up = new Direction("up", 38, 0, -1);
-    static Down = new Direction("down", 40, 0, 1);
 
-    static GetDirection(keyCode) {
-        switch(keyCode) {
+    static Up = new Direction({
+        name: "up",
+        code: "ArrowUp",
+        dx: 0,
+        dy:-1
+    });
+
+    static Down = new Direction({
+        name:"down",
+        code: "ArrowDown",
+        dx: 0,
+        dy: 1
+    });
+
+    static Left  =  new Direction({
+        name:"left",
+        code: "ArrowLeft",
+        dx: -1,
+        dy: 0
+    });
+
+    static Right = new Direction({
+        name:"right",
+        code: "ArrowRight",
+        dx: 1,
+        dy: 0
+    });
+
+    static GetDirection(code) {
+        switch(code) {
         case this.Left.code:
             return this.Left;
         case this.Up.code:

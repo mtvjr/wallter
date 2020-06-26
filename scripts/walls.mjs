@@ -113,7 +113,7 @@ class Ordering {
      * @return Ordering - The ordering of the wall
      */
     static Get(wall) {
-        const id = wall._id;
+        const id = wall.id;
         const now = Date.now();
 
         // Check cache for valid ordering
@@ -152,6 +152,8 @@ class Ordering {
             time: now,
             order: order
         });
+
+        Logger.log(Logger.Medium, `Created Ordering ${order.TopLeft.num} ${order.BottomRight.num} for ${id}`)
 
         return order;
     }

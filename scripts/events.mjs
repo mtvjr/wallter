@@ -9,7 +9,7 @@ function ControlledWallKeyHandler(event) {
         return;
     }
 
-    const dir = Directions.GetDirection(event.keyCode);
+    const dir = Directions.GetDirection(event.code);
     if (dir) {
         if (event.shiftKey) {
             // Shift is top left
