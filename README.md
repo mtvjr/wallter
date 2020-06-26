@@ -1,7 +1,7 @@
 # Wallter
 
 ![Minimum Foundry Version: 0.6.0](https://img.shields.io/badge/Minimum_Foundry_Version-0.6.0-green?style=plastic)
-![Compatible Foundry Version: 0.6.3](https://img.shields.io/badge/Compatible_Foundry_Version-0.6.3-green?style=plastic)
+![Compatible Foundry Version: 0.6.4](https://img.shields.io/badge/Compatible_Foundry_Version-0.6.4-green?style=plastic)
 ![Release Status: Beta](https://img.shields.io/badge/Release_Status-Beta-yellow?style=plastic)
 
 A module to help alter walls.
