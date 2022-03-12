@@ -180,7 +180,7 @@ export function MoveControlledWalls(direction) {
 
     Logger.log(Logger.High, `Moving ${updates.length} walls ${direction.name}.`);
 
-    canvas.scene.updateEmbeddedEntity("Wall", updates);
+    canvas.scene.updateEmbeddedDocuments("Wall", updates);
 }
 
 /**
@@ -208,7 +208,7 @@ export function MoveControlledTopLeft(direction) {
 
     Logger.log(Logger.High, `Moving ${updates.length} top left points ${direction.name}.`);
 
-    canvas.scene.updateEmbeddedEntity("Wall", updates);
+    canvas.scene.updateEmbeddedDocuments("Wall", updates);
 }
 
 /**
@@ -236,5 +236,5 @@ export function MoveControlledBottomRight(direction) {
 
     Logger.log(Logger.High, `Moving ${updates.length} bottom right points ${direction.name}.`);
 
-    canvas.scene.updateEmbeddedEntity("Wall", updates);
+    canvas.scene.updateEmbeddedDocuments("Wall", updates);
 }
