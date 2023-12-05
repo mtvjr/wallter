@@ -1,4 +1,4 @@
-name: Background-Volume CI
+name: Wallter CI
 
 on:
   push:
