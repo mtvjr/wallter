@@ -1,37 +1,37 @@
 import Logger from "./common/logger.mjs"
 import Directions from "./directions.mjs"
-import {MoveControlledWalls, MoveControlledBottomRight, MoveControlledTopLeft} from "./walls.mjs"
+import {moveControlledWalls, moveControlledBottomRight, moveControlledTopLeft } from "./walls.mjs"
 
 
-function ControlledWallKeyHandler(event) {
+function controlledWallKeyHandler(event) {
     // Ignore key binds when editing text
     if (event.isComposing || event.keyCode === 229) {
         return;
     }
 
-    const dir = Directions.GetDirection(event.code);
+    const dir = Directions.getDirection(event.code);
     if (dir) {
         if (event.shiftKey) {
             // Shift is top left
-            MoveControlledTopLeft(dir);
+            moveControlledTopLeft(dir);
         } else if (event.altKey) {
             // Alt is bottom right
-            MoveControlledBottomRight(dir);
+            moveControlledBottomRight(dir);
         } else {
-            MoveControlledWalls(dir);
+            moveControlledWalls(dir);
         }
     }
 }
 
-function OnKeyDown(event) {
-    Logger.log(Logger.Low, "A key was pressed!");
+function onKeyDown(event) {
+    Logger.log(Logger.LOW, "A key was pressed!");
 
     if (canvas.walls.controlled.length) {
-        ControlledWallKeyHandler(event);
+        controlledWallKeyHandler(event);
     }
 }
 
-export default function RegisterEvents() {
-    Logger.log(Logger.Medium, "Registering events");
-    document.addEventListener("keydown", OnKeyDown)
+export function registerEvents() {
+    Logger.log(Logger.MEDIUM, "Registering events");
+    document.addEventListener("keydown", onKeyDown)
 }

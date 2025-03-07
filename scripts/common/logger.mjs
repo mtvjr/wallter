@@ -31,25 +31,22 @@ export default class Logger {
     /**
      * Displays information of develepment concerns
      */
-    static Low = new LogLevel("low", 1);
+    static LOW = new LogLevel("low", 1);
 
     /**
      * Displays information for unusual circumstances
      */
-    static Medium = {
-        value: 2,
-        name: "medium"
-    }
+    static MEDIUM = new LogLevel("medium", 2);
 
     /**
      * Displays information for user visible changes
      */
-    static High = new LogLevel("high", 3);
+    static HIGH = new LogLevel("high", 3);
 
     /**
      * Used to display no logging
      */
-    static None = new LogLevel("none", Infinity);
+    static NONE = new LogLevel("none", Infinity);
 
     /**
      * Stores the name of the module
@@ -59,7 +56,7 @@ export default class Logger {
     /**
      * The current debug threshold
      */
-    static threshold = Logger.None;
+    static threshold = Logger.NONE;
 
     /**
      * Initializes the Logger object with a mod name and a log level

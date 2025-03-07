@@ -27,22 +27,22 @@ class EndPoint {
     /**
      * Index of the X position of the coordinate
      */
-    get X() {
+    get x() {
         return this._index + CX;
     }
 
     /**
      * Index of the Y position of the coordinate
      */
-    get Y() {
+    get y() {
         return this._index + CY;
     }
 
     /**
      * Extract the endpoint coordinates from a coordinate pair
      */
-    GetCoord(coordPair) {
-        return [ coordPair[this.X], coordPair[this.Y] ]
+    getCoord(coordPair) {
+        return [ coordPair[this.x], coordPair[this.y] ]
     }
 }
 
@@ -74,7 +74,7 @@ class Ordering {
      * @type Endpoint
      * The top left point of the order
      */
-    get TopLeft() {
+    get topLeft() {
         return this._topleft;
     }
 
@@ -82,7 +82,7 @@ class Ordering {
      * @type Endpoint
      * The bottom right point of the order
      */
-    get BottomRight() {
+    get bottomRight() {
         return this._btmright;
     }
 
@@ -92,12 +92,12 @@ class Ordering {
      * @param {Number[2]} brCoord - The bottom right coordinates
      * @param {Number[4]} coordPair - The coords replaced into their original pair places
      */
-    RecreateCoordPair(tlCoord, brCoord) {
+    recreateCoordPair(tlCoord, brCoord) {
         let arr = [0, 0, 0, 0];
-        arr[this.TopLeft.X] = tlCoord[CX];
-        arr[this.TopLeft.Y] = tlCoord[CY];
-        arr[this.BottomRight.X] = brCoord[CX];
-        arr[this.BottomRight.Y] = brCoord[CY];
+        arr[this.topLeft.x] = tlCoord[CX];
+        arr[this.topLeft.y] = tlCoord[CY];
+        arr[this.bottomRight.x] = brCoord[CX];
+        arr[this.bottomRight.y] = brCoord[CY];
         return arr;
     }
 
@@ -112,28 +112,28 @@ class Ordering {
      * @param {Wall} wall - Foundry wall object
      * @return Ordering - The ordering of the wall
      */
-    static Get(wall) {
+    static get(wall) {
         const id = wall.id;
         const now = Date.now();
 
         // Check cache for valid ordering
         if (this._cache.has(id) && (now - this._cache.get(id).time) < 5000) {
             // Entry is still valid, update time and return order
-            Logger.log(Logger.Medium, `Found ordering for ${id} in cache.`)
+            Logger.log(Logger.MEDIUM, `Found ordering for ${id} in cache.`)
             let entry = this._cache.get(id);
             entry.time = now;
             return entry.order;
         }
 
-        Logger.log(Logger.Medium, `Creating new ordering for ${id}.`)
+        Logger.log(Logger.MEDIUM, `Creating new ordering for ${id}.`)
 
         // Wall not in cache, find order and update cache
         let order;
-        const coordPair = wall.data.c;
+        const coordPair = wall.coords;
         // Check Top / Bottom First
-        if (coordPair[EP1.Y] != coordPair[EP2.Y]) {
+        if (coordPair[EP1.y] != coordPair[EP2.y]) {
             // use the higher endpoint
-            if (coordPair[EP1.Y] < coordPair[EP2.Y]) {
+            if (coordPair[EP1.y] < coordPair[EP2.y]) {
                 order = new Ordering(EP1, EP2)
             } else {
                 order = new Ordering(EP2, EP1);
@@ -141,7 +141,7 @@ class Ordering {
         } else {
             // Same height, check against left right
             // use the left-most endpoint
-            if (coordPair[EP1.X] <= coordPair[EP2.X]) {
+            if (coordPair[EP1.x] <= coordPair[EP2.x]) {
                 order = new Ordering(EP1, EP2)
             } else {
                 order = new Ordering(EP2, EP1);
@@ -153,7 +153,7 @@ class Ordering {
             order: order
         });
 
-        Logger.log(Logger.Medium, `Created Ordering ${order.TopLeft.num} ${order.BottomRight.num} for ${id}`)
+        Logger.log(Logger.MEDIUM, `Created Ordering ${order.topLeft.num} ${order.bottomRight.num} for ${id}`)
 
         return order;
     }
@@ -163,22 +163,22 @@ class Ordering {
  * Moves both points of the controlled walls in a direction.
  * @param {Direction} direction - The direction in which to move the walls
  */
-export function MoveControlledWalls(direction) {
+export function moveControlledWalls(direction) {
     const updates = canvas.walls.controlled.map((wall) => {
-        let c = wall.data.c;
+        let c = wall.coords;
 
         let p0 = wall.layer._getWallEndpointCoordinates(
-            direction.Transform(EP1.GetCoord(c))
+            direction.transform(EP1.getCoord(c))
         );
 
         let p1 = wall.layer._getWallEndpointCoordinates(
-            direction.Transform(EP2.GetCoord(c))
+            direction.transform(EP2.getCoord(c))
         );
 
         return {_id: wall.id, c: p0.concat(p1)};
     });
 
-    Logger.log(Logger.High, `Moving ${updates.length} walls ${direction.name}.`);
+    Logger.log(Logger.HIGH, `Moving ${updates.length} walls ${direction.name}.`);
 
     canvas.scene.updateEmbeddedDocuments("Wall", updates);
 }
@@ -187,26 +187,26 @@ export function MoveControlledWalls(direction) {
  * Moves the top left points of the controlled walls in a direction.
  * @param {Direction} direction - The direction in which to move the walls
  */
-export function MoveControlledTopLeft(direction) {
+export function moveControlledTopLeft(direction) {
     const updates = canvas.walls.controlled.map( (wall) => {
-        const c = wall.data.c;
-        const order = Ordering.Get(wall);
+        const c = wall.coords;
+        const order = Ordering.get(wall);
 
         const tl = wall.layer._getWallEndpointCoordinates(
-            direction.Transform(
-                order.TopLeft.GetCoord(c)
+            direction.transform(
+                order.topLeft.getCoord(c)
             )
         );
 
-        const br = order.BottomRight.GetCoord(c);
+        const br = order.bottomRight.getCoord(c);
 
         return {
             _id: wall.id,
-            c: order.RecreateCoordPair(tl, br)
+            c: order.recreateCoordPair(tl, br)
         }
     })
 
-    Logger.log(Logger.High, `Moving ${updates.length} top left points ${direction.name}.`);
+    Logger.log(Logger.HIGH, `Moving ${updates.length} top left points ${direction.name}.`);
 
     canvas.scene.updateEmbeddedDocuments("Wall", updates);
 }
@@ -215,26 +215,26 @@ export function MoveControlledTopLeft(direction) {
  * Moves the bottom right points of the controlled walls in a direction.
  * @param {Direction} direction - The direction in which to move the walls
  */
-export function MoveControlledBottomRight(direction) {
+export function moveControlledBottomRight(direction) {
     const updates = canvas.walls.controlled.map( (wall) => {
-        const c = wall.data.c;
-        const order = Ordering.Get(wall);
+        const c = wall.coords;
+        const order = Ordering.get(wall);
 
-        const tl = order.TopLeft.GetCoord(c);
+        const tl = order.topLeft.getCoord(c);
 
         const br = wall.layer._getWallEndpointCoordinates(
-            direction.Transform(
-                order.BottomRight.GetCoord(c)
+            direction.transform(
+                order.bottomRight.getCoord(c)
             )
         );
 
         return {
             _id: wall.id,
-            c: order.RecreateCoordPair(tl, br)
+            c: order.recreateCoordPair(tl, br)
         }
     })
 
-    Logger.log(Logger.High, `Moving ${updates.length} bottom right points ${direction.name}.`);
+    Logger.log(Logger.HIGH, `Moving ${updates.length} bottom right points ${direction.name}.`);
 
     canvas.scene.updateEmbeddedDocuments("Wall", updates);
 }
