@@ -1,7 +1,8 @@
 import Logger from "./common/logger.mjs"
+import Directions from "./directions.mjs";
 
-export const CX = 0;
-export const CY = 1;
+export const X = 0;
+export const Y = 1;
 
 class EndPoint {
     _index;
@@ -28,14 +29,14 @@ class EndPoint {
      * Index of the X position of the coordinate
      */
     get x() {
-        return this._index + CX;
+        return this._index + X;
     }
 
     /**
      * Index of the Y position of the coordinate
      */
     get y() {
-        return this._index + CY;
+        return this._index + Y;
     }
 
     /**
@@ -94,10 +95,10 @@ class Ordering {
      */
     recreateCoordPair(tlCoord, brCoord) {
         let arr = [0, 0, 0, 0];
-        arr[this.topLeft.x] = tlCoord[CX];
-        arr[this.topLeft.y] = tlCoord[CY];
-        arr[this.bottomRight.x] = brCoord[CX];
-        arr[this.bottomRight.y] = brCoord[CY];
+        arr[this.topLeft.x] = tlCoord[X];
+        arr[this.topLeft.y] = tlCoord[Y];
+        arr[this.bottomRight.x] = brCoord[X];
+        arr[this.bottomRight.y] = brCoord[Y];
         return arr;
     }
 
@@ -237,4 +238,70 @@ export function moveControlledBottomRight(direction) {
     Logger.log(Logger.HIGH, `Moving ${updates.length} bottom right points ${direction.name}.`);
 
     canvas.scene.updateEmbeddedDocuments("Wall", updates);
+}
+
+/**
+ * Find the center point of a group of walls
+ * @param {Wall} walls - The walls to find the center of
+ * @returns {number[]} - The center point of the walls
+ */
+function findCenter(walls) {
+    return walls.reduce((acc, wall) => {
+        const midpoint = wall.midpoint;
+        acc[X] += midpoint[X];
+        acc[Y] += midpoint[Y];
+        return acc;
+    }, [0, 0]).map(c => c / walls.length);
+}
+
+/**
+ * Flips a point in place across a center point.
+ * @param {Number[]} point The origin point
+ * @param {Number[]} center The center point
+ * @param {Number} coordinate - The x or y coordinate to flip accross
+ * @returns {Number[]} The flipped point
+ */
+function flipPoint(point, center, coordinate) {
+    const delta = point[coordinate] - center[coordinate];
+    const newPos = point[coordinate] - (2 * delta);
+    const newPoint = [...point];
+    newPoint[coordinate] = newPos;
+    return newPoint;
+}
+
+/**
+ * Move the endpoints of the selected walls accross the center point
+ * in the given direction.
+ * @param {Direction} direction - The direction in which to flip the walls
+ * @returns {boolean} - True if any walls were flipped, false otherwise
+ */
+export function flipControlledWalls(direction) {
+    const walls = canvas.walls.controlled;
+    if (walls.length == 0) {
+        return false;
+    }
+    const component = (direction == Directions.UP || direction == Directions.DOWN) ? Y : X;
+
+    // First, find the center point of the selected walls
+    const center = findCenter(walls);
+
+    // Then collect each wall update by adjusting the appropriate coordinate
+    const updates = walls.map((wall) => {
+        let newCoords = wall.coords;
+
+        let flipped = flipPoint(newCoords.slice(0, 2), center, component);
+        newCoords[0] = flipped[0];
+        newCoords[1] = flipped[1];
+        flipped = flipPoint(newCoords.slice(2, 4), center, component);
+        newCoords[2] = flipped[0];
+        newCoords[3] = flipped[1];
+
+        return {
+            _id: wall.id,
+            c: newCoords
+        }
+    });
+
+    canvas.scene.updateEmbeddedDocuments("Wall", updates);
+    return true;
 }

@@ -1,4 +1,4 @@
-import {CX, CY} from "./walls.mjs"
+import {X, Y} from "./walls.mjs"
 
 class Direction {
     _name = "";
@@ -25,8 +25,8 @@ class Direction {
 
     transform(coord, scale = 10) {
         return {
-            x: coord[CX] + this.dX * scale,
-            y: coord[CY] + this.dY * scale
+            x: coord[X] + this.dX * scale,
+            y: coord[Y] + this.dY * scale
         }
     }
 }

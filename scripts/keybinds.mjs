@@ -1,6 +1,6 @@
 import Logger from "./common/logger.mjs"
 import Directions from "./directions.mjs"
-import {moveControlledWalls, moveControlledBottomRight, moveControlledTopLeft } from "./walls.mjs"
+import {flipControlledWalls, moveControlledWalls, moveControlledBottomRight, moveControlledTopLeft} from "./walls.mjs"
 
 
 /**
@@ -44,6 +44,7 @@ const moveHint =
     "Move all selected walls to the DIR.<br/>" +
     "Hold shift to move top (or left) point or hold alt to move bottom (or right) points";
 
+const flipHint = "Flip all selected walls across the AX axis.";
 
 /**
  * Register all keybinds used by the wallter module with foundry.
@@ -54,9 +55,9 @@ export default function registerAllKeybinds() {
     registerKeybind({
         "name": "Move Walls Up",
         "hint": moveHint.replace("DIR", "up"),
-        "editable": [{
-            "key": "ArrowUp",
-        }],
+        "editable": [
+            {"key": "ArrowUp"}
+        ],
         "onDown": (context) => {
             onMoveWall(context, Directions.UP);
         },
@@ -65,9 +66,9 @@ export default function registerAllKeybinds() {
     registerKeybind({
         "name": "Move Walls Down",
         "hint": moveHint.replace("DIR", "down"),
-        "editable": [{
-            "key": "ArrowDown",
-        }],
+        "editable": [
+            {"key": "ArrowDown"}
+        ],
         "onDown": (context) => {
             onMoveWall(context, Directions.DOWN);
         },
@@ -76,23 +77,41 @@ export default function registerAllKeybinds() {
     registerKeybind({
         "name": "Move Walls Left",
         "hint": moveHint.replace("DIR", "left"),
-        "editable": [{
-            "key": "ArrowLeft",
-        }],
-        "onDown": (context) => {
-            onMoveWall(context, Directions.LEFT);
-        },
+        "editable": [
+            {"key": "ArrowLeft"}
+        ],
+        "onDown": (context) => { onMoveWall(context, Directions.LEFT); },
         "reservedModifiers": ["SHIFT", "ALT"],
     });
     registerKeybind({
         "name": "Move Walls Right",
         "hint": moveHint.replace("DIR", "right"),
-        "editable": [{
-            "key": "ArrowRight",
-        }],
-        "onDown": (context) => {
-            onMoveWall(context, Directions.RIGHT);
-        },
+        "editable": [
+            {"key": "ArrowRight"}
+        ],
+        "onDown": (context) => { onMoveWall(context, Directions.RIGHT); },
         "reservedModifiers": ["SHIFT", "ALT"],
+    });
+    registerKeybind({
+        "name": "Flip Walls Vertically",
+        "hint": flipHint.replace("AX", "X"),
+        "editable": [
+            {"key": "ArrowUp", "modifiers": ["CONTROL"]},
+            {"key": "ArrowDown", "modifiers": ["CONTROL"]},
+        ],
+        "onDown": () => { return flipControlledWalls(Directions.UP); },
+        "precedes": CONST.KEYBINDING_PRECEDENCE.PRIORITY, // We need to run before the core.pan keybind
+        "repeat": false,
+    });
+    registerKeybind({
+        "name": "Flip Walls Horizontally",
+        "hint": flipHint.replace("AX", "Y"),
+        "editable": [
+            {"key": "ArrowLeft", "modifiers": ["CONTROL"]},
+            {"key": "ArrowRight", "modifiers": ["CONTROL"]},
+        ],
+        "onDown": () => { return flipControlledWalls(Directions.LEFT); },
+        "precedes": CONST.KEYBINDING_PRECEDENCE.PRIORITY, // We need to run before the core.pan keybind
+        "repeat": false,
     });
 }
