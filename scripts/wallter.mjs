@@ -3,7 +3,7 @@ import registerAllKeybinds from "./keybinds.mjs"
 
 export const MOD_NAME = "Wallter";
 export const MOD_NICK = "wallter";
-export const VERSION  = "v0.2.0";
+export const VERSION  = "v0.3.0";
 
 // Target for end users
 const RELEASE = {
