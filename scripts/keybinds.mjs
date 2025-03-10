@@ -1,6 +1,6 @@
 import Logger from "./common/logger.mjs"
 import Directions from "./directions.mjs"
-import {flipControlledWalls, moveControlledWalls, moveControlledBottomRight, moveControlledTopLeft} from "./walls.mjs"
+import {flipControlledWalls, moveControlledWalls, moveControlledBottomRight, moveControlledTopLeft, rotateControlledWalls} from "./walls.mjs"
 
 
 /**
@@ -113,5 +113,21 @@ export default function registerAllKeybinds() {
         "onDown": () => { return flipControlledWalls(Directions.LEFT); },
         "precedes": CONST.KEYBINDING_PRECEDENCE.PRIORITY, // We need to run before the core.pan keybind
         "repeat": false,
+    });
+    registerKeybind({
+        "name": "Rotate Walls Clockwise",
+        "hint": "Rotate all selected walls clockwise.",
+        "editable": [
+            {"key": "KeyE"}
+        ],
+        "onDown": () => { return rotateControlledWalls(false); },
+    });
+    registerKeybind({
+        "name": "Rotate Walls Counter-Clockwise",
+        "hint": "Rotate all selected walls counter-clockwise.",
+        "editable": [
+            {"key": "KeyQ"}
+        ],
+        "onDown": () => { return rotateControlledWalls(true); },
     });
 }

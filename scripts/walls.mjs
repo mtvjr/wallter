@@ -305,3 +305,69 @@ export function flipControlledWalls(direction) {
     canvas.scene.updateEmbeddedDocuments("Wall", updates);
     return true;
 }
+
+/**
+ * Convert an angle from degrees to radians
+ * @param {Number} degrees - The angle in degrees
+ * @returns number - The angle in radians
+ */
+function degreesToRadians(degrees) {
+    return degrees * (Math.PI / 180);
+}
+
+/**
+ * Rotate a point around a center point by a given angle.
+ * @param {Number[]} point - The original point
+ * @param {Number[]} center - The pivot point
+ * @param {Number} angle - The angle in radians
+ * @returns {Number[]} - The rotated point
+ */
+function rotateAPoint(point, center, angle) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+
+    const x = point[X] - center[X];
+    const y = point[Y] - center[Y];
+
+    return [
+        x * cos - y * sin + center[X],
+        x * sin + y * cos + center[Y]
+    ];
+}
+
+/**
+ * Rotate all controlled wall points around their central point.
+ * @param {bool} counterClockwise - True if the rotation is counter-clockwise instead
+ * of clockwise.
+ */
+export function rotateControlledWalls(clockwise) {
+    const walls = canvas.walls.controlled;
+    if (walls.length == 0) {
+        return false;
+    }
+
+    // First, find the center point of the selected walls
+    const center = findCenter(walls);
+
+    // Then collect each wall update by adjusting both endpoints
+    const updates = walls.map((wall) => {
+        let newCoords = wall.coords;
+
+        const angle = degreesToRadians(clockwise ? -6 : 6);
+
+        let rotated = rotateAPoint(newCoords.slice(0, 2), center, angle);
+        newCoords[0] = rotated[0];
+        newCoords[1] = rotated[1];
+        rotated = rotateAPoint(newCoords.slice(2, 4), center, angle);
+        newCoords[2] = rotated[0];
+        newCoords[3] = rotated[1];
+
+        return {
+            _id: wall.id,
+            c: newCoords
+        }
+    });
+
+    canvas.scene.updateEmbeddedDocuments("Wall", updates);
+    return true;
+}
